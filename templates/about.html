@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - DeepFruitVeg</title>
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+    body {background:#f0f4f8; min-height:100vh; display:flex; flex-direction:column;}
+
+    /* Header */
+    header {position:sticky; top:0; display:flex; justify-content:space-between; align-items:center; padding:15px 50px;
+      background:linear-gradient(90deg,#FF3E3E,#FF8C00,#FFD700,#4CAF50,#9C27B0); color:white; box-shadow:0 4px 8px rgba(0,0,0,0.15); z-index:1000;}
+    .logo-title {display:flex; align-items:center; gap:15px;}
+    .logo-title img {width:50px; height:50px; object-fit:contain; border-radius:5px; background:white; box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+    .logo-title h1 {font-size:22px; font-weight:600;}
+    nav button {background:black; border:none; color:white; padding:10px 20px; margin-left:12px; border-radius:25px; font-weight:500; cursor:pointer; transition:0.3s;}
+    nav button:hover {background:#333; transform:translateY(-2px);}
+
+    /* Hero */
+    main {flex:1; display:flex; justify-content:center; align-items:center; padding:60px 20px; background:url('fruits-vegetables.jpg') no-repeat center/cover; position:relative;}
+    main::before {content:""; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:1;}
+    .content {max-width:800px; background:rgba(255,255,255,0.95); padding:50px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.15); position:relative; z-index:2; text-align:center;}
+    .content p {font-size:18px; line-height:1.8; color:#333;}
+    .separator {margin:30px auto 10px auto; height:2px; width:80px; background:linear-gradient(90deg,#FF3E3E,#FF8C00,#FFD700,#4CAF50,#9C27B0); border-radius:5px;}
+    .project-name {font-size:30px; font-weight:bold; color:#2E7D32; margin-top:10px;}
+    .project-subtitle {font-size:16px; color:#777; margin-top:5px; letter-spacing:1px;}
+
+    /* Team */
+    .team-section {padding:60px 20px; text-align:center; background:#fff;}
+    .team-section h2 {font-size:28px; color:#2E7D32; margin-bottom:30px;}
+    .team-grid {display:flex; flex-wrap:wrap; gap:30px; justify-content:center;}
+    .team-card {cursor:pointer; text-align:center;}
+    .team-card img {width:120px; height:120px; object-fit:cover; border-radius:50%; box-shadow:0 4px 10px rgba(0,0,0,0.2);}
+    .team-card h3 {margin-top:10px; font-size:18px; color:#333;}
+
+    /* Modal */
+    .modal {display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:2000;}
+    .modal-content {background:#fff; padding:40px; border-radius:20px; width:90%; max-width:700px; text-align:center; position:relative;}
+    .modal-content img {width:150px; height:150px; border-radius:50%; object-fit:cover; margin-bottom:20px; box-shadow:0 6px 15px rgba(0,0,0,0.25);}
+    .modal-content h3 {font-size:22px; color:#2E7D32; margin-bottom:10px;}
+    .modal-content p {font-size:16px; color:#555; margin-bottom:8px;}
+    .modal-content .highlight {font-weight:bold; color:#FF3E3E;}
+    .modal-content #modalDesc {margin-top:15px; line-height:1.6; color:#333; text-align:left;}
+    .close-btn {position:absolute; top:15px; right:20px; font-size:24px; color:red; cursor:pointer; font-weight:bold;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-title">
+      <img src="../static/deepfruit.png" alt="Logo">
+      <h1>Deep Fruit and Vegetable Identification</h1>
+    </div>
+    <nav>
+      <button onclick="navigateTo('index.html')">Home</button>
+      <button onclick="navigateTo('about.html')">About Us</button>
+      <button onclick="navigateTo('gallery.html')">Gallery</button>
+      <button onclick="navigateTo('predict.html')">Predict</button>
+      <button onclick="navigateTo('contact.html')">Contact</button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="content">
+      <p>
+        DeepFruitVeg: Automated Fruit and Vegetable Identification system that identifies and classifies fruits and vegetables from images. It uses AI to recognize features like shape, color, and texture. This system is used in agriculture, retail, and dietary management for tasks like quality inspection, inventory tracking, and nutritional analysis.
+      </p>
+      <div class="separator"></div>
+      <div class="project-name">DEEPFRUITVEG</div>
+      <div class="project-subtitle">Identification</div>
+    </div>
+  </main>
+
+  <!-- Team Portfolio -->
+  <section class="team-section">
+    <h2>Our Team</h2>
+    <div class="team-grid">
+      <div class="team-card" onclick="openModal(
+        'Nagendra Babu','6304937824','nagendrababu2816@gmail.com','Team Lead and ML model developer','../static/nagendra.png',
+        'Nagendra Babu leads the DeepFruitVeg project, ensuring all modules work seamlessly. He coordinates the team, manages workflow, and oversees development. With expertise in AI and web integration, he ensures high-quality output. Koti also guides research on AI models and optimization techniques. He plays a key role in strategic planning and project execution.')">
+        <img src="../static/nagendra.png" alt="Koti">
+        <h3>Nagendra Babu</h3>
+      </div>
+      <div class="team-card" onclick="openModal(
+        'Koti Reddy','6300728325','kotireddy1706@gmail.com','UI/UX and Backend Developer','../static/koti reddy.png',
+        'Koti reddy handles the core development of the AI models and backend integration. He is responsible for coding, debugging, and testing. He ensures that the AI correctly identifies fruits and vegetables. Nagendra also works on API design and performance optimization. He contributes to data preprocessing and model training.')">
+        <img src="../static/koti reddy.png" alt="Nagendra">
+        <h3>Koti Reddy</h3>
+      </div>
+      <div class="team-card" onclick="openModal(
+        'Manoj Reddy','8074822751','manojreddyannem8074@gmail.com','Data collection Preprocessing and trainer','../static/manoj.png',
+        'Manoj Reddy is the UI/UX designer of DeepFruitVeg. He creates user-friendly interfaces and ensures a smooth website experience. He focuses on layout, colors, typography, and responsive design. Manoj also designs graphics, icons, and illustrations. His work improves accessibility and visual appeal.')">
+        <img src="../static/manoj.png" alt="Manoj">
+        <h3>Manoj Reddy</h3>
+      </div>
+      <div class="team-card" onclick="openModal(
+        'Muni Shekar','8500515996','munishekar398@gmail.com','Documentation and report Speciaist','../static/muni.png',
+        'Muni Shekar is responsible for testing and quality assurance. He conducts rigorous tests on all modules, reports bugs, and ensures smooth functionality. Muni also validates AI predictions and website performance. He helps maintain high standards and user satisfaction. His work ensures reliability and robustness.')">
+        <img src="../static/muni.png" alt="Muni">
+        <h3>Muni Shekar</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal -->
+  <div class="modal" id="profileModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <img id="modalImg" src="" alt="Profile">
+      <h3 id="modalName"></h3>
+      <p class="highlight" id="modalDesignation"></p>
+      <p id="modalPhone"></p>
+      <p id="modalEmail"></p>
+      <p id="modalDesc"></p>
+    </div>
+  </div>
+
+  <script>
+    function navigateTo(page){ window.location.href=page; }
+
+    function openModal(name, phone, email, designation, imgSrc, description){
+      document.getElementById('modalName').textContent=name;
+      document.getElementById('modalPhone').textContent="📞 "+phone;
+      document.getElementById('modalEmail').textContent="✉️ "+email;
+      document.getElementById('modalDesignation').textContent=designation;
+      document.getElementById('modalImg').src=imgSrc;
+      document.getElementById('modalDesc').textContent=description;
+      document.getElementById('profileModal').style.display='flex';
+    }
+
+    function closeModal(){ document.getElementById('profileModal').style.display='none'; }
+  </script>
+</body>
+</html>

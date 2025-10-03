@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepFruitVeg Gallery</title>
+<style>
+  body{
+    font-family:'Segoe UI', sans-serif;
+    background:#f0f4f8;
+    text-align:center;
+    padding:50px;
+  }
+  h1{
+    font-size:48px; 
+    color:#2E7D32; 
+    margin-bottom:50px;
+  }
+  .btn-container{
+    display:flex; 
+    justify-content:center; 
+    gap:50px; 
+    flex-wrap:wrap;
+  }
+  .btn-container button{
+    padding:40px 80px;
+    font-size:36px;
+    font-weight:bold;
+    border:none;
+    border-radius:20px;
+    background:#2E7D32;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+  }
+  .btn-container button:hover{
+    background:#1b5e20;
+    transform:scale(1.05);
+  }
+</style>
+</head>
+<body>
+
+<h1>DeepFruitVeg Gallery</h1>
+
+<div class="btn-container">
+  <!-- Navigate to gallery-single.html with query parameter -->
+  <button onclick="window.location.href='gallery-single.html?type=fruits'">Fruits</button>
+  <button onclick="window.location.href='gallery-single.html?type=vegetables'">Vegetables</button>
+</div>
+
+</body>
+</html>

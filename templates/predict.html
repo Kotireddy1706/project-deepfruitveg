@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepFruitVeg - Prediction</title>
+<style>
+*{margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+body{
+    background: url("../static/background.png") no-repeat center center fixed;
+    background-size: cover;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding-top:80px;
+}
+header{
+    position:sticky; top:0;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:15px 50px;
+    background:linear-gradient(90deg,#FF3E3E,#FF8C00,#FFD700,#4CAF50,#9C27B0);
+    color:white;
+    box-shadow:0 4px 8px rgba(0,0,0,0.15);
+    width:100%;
+    z-index:1000;
+}
+.logo-title{display:flex; align-items:center; gap:15px;}
+.logo-title img{width:50px; height:50px; object-fit:contain; border-radius:5px; background:white; box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.logo-title h1{font-size:24px; font-weight:600;}
+nav{display:flex; align-items:center; gap:12px;}
+nav button{background:black; border:none; color:white; padding:10px 20px; border-radius:25px; font-weight:500; cursor:pointer; transition:0.3s; position:relative;}
+nav button:hover{background:#333; transform:translateY(-2px);}
+main{flex:1; display:flex; flex-direction:column; align-items:center; width:100%; padding:40px 20px;}
+.hero{background: rgba(255,255,255,0.9); padding:40px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.15); text-align:center; margin-bottom:40px; transition: transform 0.3s, box-shadow 0.3s;}
+.hero:hover{transform:translateY(-5px); box-shadow:0 12px 30px rgba(0,0,0,0.25);}
+.hero h2{font-size:32px; color:#2E7D32; margin-bottom:15px;}
+.hero p{font-size:18px; line-height:1.8; color:#333; max-width:800px; margin:auto;}
+.start-btn{
+    margin-top:20px;
+    padding:14px 35px;
+    background:#2E7D32;
+    color:white;
+    border:none;
+    border-radius:30px;
+    font-size:18px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+.start-btn:hover{background:#1b5e20; transform:translateY(-2px);}
+.content{display:none; flex-direction:column; align-items:center; margin-top:30px;}
+.file-card{
+    background: rgba(255,255,255,0.95); 
+    padding:30px; 
+    border-radius:15px; 
+    box-shadow:0 8px 20px rgba(0,0,0,0.15); 
+    text-align:center; 
+    transition: transform 0.3s, box-shadow 0.3s; 
+    width:360px;
+}
+.file-card:hover{transform:translateY(-5px); box-shadow:0 12px 30px rgba(0,0,0,0.25);}
+.file-card h3{font-size:24px; color:#2E7D32; margin-bottom:20px;}
+.drop-area{
+    border:2px dashed #2E7D32;
+    border-radius:15px;
+    padding:30px;
+    cursor:pointer;
+    transition:0.3s;
+    position:relative;
+}
+.drop-area.hover{background:rgba(46,125,50,0.1);}
+.drop-area img{width:100%; height:200px; object-fit:contain; display:none; margin-bottom:10px; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+.drop-area p{font-size:16px; color:#333; margin-bottom:10px;}
+.drop-area input[type="file"]{display:none;}
+#predictBtn{padding:12px 30px; font-size:16px; font-weight:600; color:white; background:#FF3E3E; border:none; border-radius:25px; cursor:pointer; transition:0.3s; margin-top:20px; display:none;}
+#predictBtn:hover{background:#C70000; transform:translateY(-2px);}
+#resultCard{
+    display:none;
+    margin-top:20px;
+    background: rgba(255,255,255,0.95);
+    padding:20px 30px;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    max-width:350px;
+    text-align:center;
+}
+#resultCard h3{color:#2E7D32; margin-bottom:10px;}
+#resultCard p{color:#333; font-size:16px; line-height:1.5;}
+@media(max-width:768px){
+    .hero{padding:30px; font-size:16px;}
+    .file-card{width:90%;}
+    #resultCard{width:90%;}
+}
+</style>
+</head>
+<body>
+<header>
+    <div class="logo-title">
+        <img src="../static/deepfruit.png" alt="Logo">
+        <h1>DeepFruitVeg</h1>
+    </div>
+    <nav>
+        <button onclick="navigateTo('index.html')">Home</button>
+        <button onclick="navigateTo('about.html')">About Us</button>
+        <button onclick="navigateTo('gallery.html')">Gallery</button>
+        <button onclick="navigateTo('predict.html')">Predict</button>
+        <button onclick="navigateTo('contact.html')">Contact</button>
+    </nav>
+</header>
+
+<main>
+    <div class="hero">
+        <h2>Fruit and Vegetable Identification</h2>
+        <p>DeepFruitVeg uses AI to automatically identify fruits and vegetables from images. Upload a clear image and get accurate identification with nutritional insights.</p>
+        <button class="start-btn" id="startPredictionBtn">Start Prediction</button>
+    </div>
+
+    <div class="content" id="fileSelection">
+        <div class="file-card">
+            <h3>Select Image</h3>
+            <div class="drop-area" id="dropArea">
+                <img id="preview" src="#" alt="Preview">
+                <p>Drag & Drop image here or click to browse</p>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+            <button id="predictBtn">Proceed to Prediction</button>
+        </div>
+    </div>
+
+    <div id="resultCard">
+        <h3 id="predictedName"></h3>
+        <p id="nutritionalInfo"></p>
+    </div>
+</main>
+
+<script>
+function navigateTo(page){ window.location.href = page; }
+
+const startBtn = document.getElementById('startPredictionBtn');
+const fileSection = document.getElementById('fileSelection');
+const dropArea = document.getElementById('dropArea');
+const fileInput = document.getElementById('fileInput');
+const preview = document.getElementById('preview');
+const predictBtn = document.getElementById('predictBtn');
+const resultCard = document.getElementById('resultCard');
+const predictedName = document.getElementById('predictedName');
+const nutritionalInfo = document.getElementById('nutritionalInfo');
+
+startBtn.addEventListener('click', ()=>{
+    fileSection.style.display='flex';
+    fileSection.scrollIntoView({behavior:"smooth"});
+});
+
+// Drag & Drop Effects
+dropArea.addEventListener('dragover', (e)=>{ e.preventDefault(); dropArea.classList.add('hover'); });
+dropArea.addEventListener('dragleave', ()=>{ dropArea.classList.remove('hover'); });
+dropArea.addEventListener('drop', (e)=>{
+    e.preventDefault(); dropArea.classList.remove('hover');
+    fileInput.files = e.dataTransfer.files;
+    handleFile(fileInput.files[0]);
+});
+dropArea.addEventListener('click', ()=>{ fileInput.click(); });
+
+fileInput.addEventListener('change', (e)=>{ handleFile(e.target.files[0]); });
+
+function handleFile(file){
+    if(file){
+        const reader = new FileReader();
+        reader.onload = function(ev){
+            preview.src = ev.target.result;
+            preview.style.display = 'block';
+            predictBtn.style.display='inline-block';
+            resultCard.style.display='none';
+            dropArea.querySelector('p').style.display='none';
+            predictBtn.scrollIntoView({behavior:"smooth"});
+        }
+        reader.readAsDataURL(file);
+    }
+}
+
+// Mock Prediction
+predictBtn.addEventListener('click', ()=>{
+    const fruitsVeggies = [
+        {name:"Apple", info:"Calories: 52 kcal per 100g. Rich in Vitamin C and fiber."},
+        {name:"Banana", info:"Calories: 96 kcal per 100g. High in potassium and Vitamin B6."},
+        {name:"Carrot", info:"Calories: 41 kcal per 100g. Rich in beta-carotene and Vitamin A."},
+        {name:"Tomato", info:"Calories: 18 kcal per 100g. Contains Vitamin C and antioxidants."},
+        {name:"Spinach", info:"Calories: 23 kcal per 100g. Rich in iron, calcium, and vitamins."}
+    ];
+    const result = fruitsVeggies[Math.floor(Math.random()*fruitsVeggies.length)];
+    predictedName.textContent = "Predicted: " + result.name;
+    nutritionalInfo.textContent = result.info;
+    resultCard.style.display='block';
+    resultCard.scrollIntoView({behavior:"smooth"});
+});
+</script>
+</body>
+</html>
