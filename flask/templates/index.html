@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepFruitVeg</title>
+<style>
+*{margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+
+/* Background Image */
+body{
+    background: url("../static/background.png") no-repeat center center fixed;
+    background-size: cover;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+}
+
+header{
+    position:sticky; top:0;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:15px 50px;
+    background:linear-gradient(90deg,#FF3E3E,#FF8C00,#FFD700,#4CAF50,#9C27B0);
+    color:white;
+    box-shadow:0 4px 8px rgba(0,0,0,0.15);
+    z-index:1000;
+}
+.logo-title{display:flex; align-items:center; gap:15px;}
+.logo-title img{width:50px; height:50px; object-fit:contain; border-radius:5px; background:white; box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.logo-title h1{font-size:24px; font-weight:600;}
+nav{display:flex; align-items:center; gap:12px;}
+nav button{background:black; border:none; color:white; padding:10px 20px; border-radius:25px; font-weight:500; cursor:pointer; transition:0.3s; position:relative;}
+nav button:hover{background:#333; transform:translateY(-2px);}
+
+/* Dropdown under Home */
+.dropdown{position:relative;}
+.dropdown-content{display:none; position:absolute; top:110%; left:0; background:white; color:black; min-width:180px; border-radius:10px; box-shadow:0 6px 15px rgba(0,0,0,0.2); z-index:1001; overflow:hidden;}
+.dropdown-content div{padding:10px 15px; cursor:pointer; font-size:15px; border-bottom:1px solid #eee;}
+.dropdown-content div:hover{background:#f4f4f4;}
+.dropdown:hover .dropdown-content{display:block;}
+
+/* Forms */
+main{flex:1; display:flex; justify-content:center; align-items:center; padding:40px 20px; position:relative;}
+main.overlay::before{content:""; position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgba(255,255,255,0.4); z-index:1;}
+#login-register{position:relative; z-index:2; background: rgba(255,255,255,0.85); padding:50px 40px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.25); max-width:400px; width:100%; text-align:center; transition: transform 0.3s, box-shadow 0.3s;}
+#login-register:hover{transform:translateY(-10px) scale(1.02); box-shadow:0 12px 30px rgba(0,0,0,0.35);}
+#login-register h2{margin-bottom:20px; color:#2E7D32;}
+#login-register input{width:100%; padding:12px 15px; margin:8px 0; border-radius:10px; border:1px solid #ccc; font-size:16px;}
+#login-register button{width:100%; padding:12px; margin-top:15px; border-radius:25px; border:none; background:black; color:white; font-size:16px; cursor:pointer; transition:0.3s;}
+#login-register button:hover{background:#333; transform:translateY(-2px);}
+#login-register .message{margin-top:10px; font-size:14px; color:red;}
+#login-register .toggle{margin-top:10px; font-size:14px; cursor:pointer; color:#2E7D32; text-decoration:underline;}
+
+/* Home Content */
+#home-content{display:none; flex-direction:column; width:100%; max-width:1200px; align-items:center;}
+.hero{background: rgba(255,255,255,0.9); padding:40px; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.15); text-align:center; margin-bottom:40px; transition: transform 0.3s, box-shadow 0.3s;}
+.hero:hover{transform:translateY(-5px); box-shadow:0 12px 30px rgba(0,0,0,0.25);}
+.hero h2{font-size:32px; color:#2E7D32; margin-bottom:15px;}
+.hero p{font-size:18px; line-height:1.8; color:#333;}
+.section-title{font-size:28px; color:#2E7D32; margin:30px 0 20px 0; text-align:center;}
+.demo-container{width:100%; overflow:hidden; margin:40px 0;}
+.demo-track{display:flex; gap:40px; flex-wrap:wrap; justify-content:center;}
+.demo-card{background:white; border-radius:15px; padding:30px; text-align:center; box-shadow:0 6px 18px rgba(0,0,0,0.15); max-width:300px; transition:transform 0.3s,box-shadow 0.3s;}
+.demo-card:hover{transform:translateY(-5px); box-shadow:0 10px 25px rgba(0,0,0,0.25);}
+.demo-card img{width:100%; height:200px; object-fit:contain; margin-bottom:15px;}
+.demo-card h4{color:#2E7D32; margin-bottom:10px; font-size:20px;}
+.demo-card p{font-size:16px; color:#555; line-height:1.5;}
+
+/* Get Started Button */
+.get-started-btn{
+    display:block;
+    margin:30px auto 0 auto;
+    padding:14px 35px;
+    background:#2E7D32;
+    color:white;
+    border:none;
+    border-radius:30px;
+    font-size:18px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+.get-started-btn:hover{
+    background:#1b5e20;
+    transform:translateY(-2px);
+}
+
+@media(max-width:768px){
+    header{flex-direction:column; gap:15px;} 
+    nav{flex-wrap:wrap; justify-content:center;}
+    #home-content{align-items:center;}
+    .demo-card{width:80%;}
+}
+
+/* Section title styling */
+.section-title{
+    font-size:28px;
+    color:#2E7D32;
+    margin:30px 0 20px 0;
+    text-align:center;
+    background:#ffffff;
+    padding:12px 20px;
+    border-radius:8px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    display:inline-block;
+}
+</style>
+</head>
+<body>
+<header>
+    <div class="logo-title">
+        <img src="../static/deepfruit.png" alt="Logo">
+        <h1>DeepFruitVeg</h1>
+    </div>
+    <nav>
+        <div class="dropdown">
+            <button id="homeBtn">Home</button>
+            <div class="dropdown-content" id="homeDropdown">
+                <div id="accountName">Guest</div>
+                <div id="logoutBtn">Logout</div>
+            </div>
+        </div>
+        <button onclick="navigateTo('about.html')">About Us</button>
+        <button onclick="navigateTo('gallery.html')">Gallery</button>
+        <button onclick="navigateTo('predict.html')">Predict</button>
+        <button onclick="navigateTo('contact.html')">Contact</button>
+    </nav>
+</header>
+
+<main id="mainArea" class="overlay">
+    <!-- Login/Register Form -->
+    <div id="login-register">
+        <h2 id="form-title">Login</h2>
+        <div id="login-fields">
+            <input type="email" id="loginEmail" placeholder="Email ID">
+            <input type="password" id="loginPassword" placeholder="Password">
+        </div>
+        <div id="register-fields" style="display:none;">
+            <input type="text" id="firstName" placeholder="First Name">
+            <input type="text" id="lastName" placeholder="Last Name">
+            <input type="text" id="mobile" placeholder="Mobile Number">
+            <input type="email" id="email" placeholder="Email ID">
+            <input type="password" id="regPassword" placeholder="Password">
+        </div>
+        <button id="submit-btn">Login</button>
+        <div class="message" id="message"></div>
+        <div class="toggle" id="toggle-form">Don't have an account? Register</div>
+    </div>
+
+    <!-- Home Content -->
+    <div id="home-content">
+        <div class="hero">
+            <h2>Welcome to DeepFruitVeg</h2>
+            <p>Upload images of fruits or vegetables to get instant identification and nutritional information. Follow the steps below to use the system easily.</p>
+        </div>
+
+        <div class="section-title">How to Use DeepFruitVeg</div>
+        <div class="demo-container">
+            <div class="demo-track">
+                <div class="demo-card">
+                    <img src="../static/upload.png" alt="Upload">
+                    <h4>Step 1: Upload Image</h4>
+                    <p>Select an image of a fruit or vegetable from your device. Make sure the image is clear and well-lit.</p>
+                </div>
+                <div class="demo-card">
+                    <img src="../static/predict.png" alt="Predict">
+                    <h4>Step 2: Predict</h4>
+                    <p>The system analyzes the uploaded image and identifies the fruit or vegetable automatically.</p>
+                </div>
+                <div class="demo-card">
+                    <img src="../static/info.png" alt="Information">
+                    <h4>Step 3: View Information</h4>
+                    <p>Get detailed information about the produce including name, classification, and nutritional facts.</p>
+                </div>
+            </div>
+            <!-- Get Started Button -->
+            <button class="get-started-btn" onclick="navigateTo('predict.html')">Get Started</button>
+        </div>
+    </div>
+</main>
+
+<script>
+function navigateTo(page){ window.location.href = page; }
+
+// Load users
+let users = JSON.parse(localStorage.getItem('users')||'{}');
+
+// Elements
+const loginRegister = document.getElementById('login-register');
+const homeContent = document.getElementById('home-content');
+const submitBtn = document.getElementById('submit-btn');
+const toggleForm = document.getElementById('toggle-form');
+const formTitle = document.getElementById('form-title');
+const message = document.getElementById('message');
+const loginFields = document.getElementById('login-fields');
+const registerFields = document.getElementById('register-fields');
+const accountName = document.getElementById('accountName');
+const logoutBtn = document.getElementById('logoutBtn');
+const mainArea = document.getElementById('mainArea');
+
+let isLogin = true;
+
+// Check session on load
+let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+if(currentUser){ showHome(currentUser); }
+
+// Toggle Login/Register
+toggleForm.addEventListener('click', ()=>{
+    isLogin = !isLogin;
+    if(isLogin){
+        formTitle.textContent = 'Login';
+        submitBtn.textContent = 'Login';
+        toggleForm.textContent = "Don't have an account? Register";
+        loginFields.style.display = 'block';
+        registerFields.style.display = 'none';
+        message.textContent='';
+    } else {
+        formTitle.textContent = 'Register';
+        submitBtn.textContent = 'Register';
+        toggleForm.textContent = "Already have an account? Login";
+        loginFields.style.display = 'none';
+        registerFields.style.display = 'block';
+        message.textContent='';
+    }
+});
+
+// Handle Login/Register
+submitBtn.addEventListener('click', ()=>{
+    if(isLogin){
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        if(!email || !password){ message.style.color='red'; message.textContent='Please fill both fields'; return; }
+        if(users[email] && users[email].password === password){
+            localStorage.setItem('currentUser', JSON.stringify(users[email]));
+            showHome(users[email]);
+        } else { message.style.color='red'; message.textContent='Invalid email or password'; }
+    } else {
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const mobile = document.getElementById('mobile').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('regPassword').value.trim();
+        if(!firstName||!lastName||!mobile||!email||!password){ message.style.color='red'; message.textContent='Please fill all fields'; return; }
+        if(users[email]){
+            message.style.color='red'; message.textContent='Email already registered';
+        } else {
+            users[email] = {firstName,lastName,mobile,email,password};
+            localStorage.setItem('users', JSON.stringify(users));
+            message.style.color='green'; message.textContent='Registration successful! You can now login.';
+            setTimeout(()=>{
+                isLogin=true;
+                formTitle.textContent = 'Login';
+                submitBtn.textContent = 'Login';
+                toggleForm.textContent = "Don't have an account? Register";
+                loginFields.style.display = 'block';
+                registerFields.style.display = 'none';
+                message.textContent='';
+            },1500);
+        }
+    }
+});
+
+// Show Home Page
+function showHome(user){
+    loginRegister.style.display='none';
+    homeContent.style.display='flex';
+    mainArea.classList.remove('overlay');
+    accountName.textContent = user.firstName + " " + user.lastName;
+}
+
+// Logout
+logoutBtn.addEventListener('click', ()=>{
+    localStorage.removeItem('currentUser');
+    homeContent.style.display='none';
+    loginRegister.style.display='block';
+    mainArea.classList.add('overlay');
+});
+</script>
+</body>
+</html>

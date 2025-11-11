@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepFruitVeg - Predict</title>
+<style>
+*{margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+body{
+    background: url("../static/background.png") no-repeat center center fixed;
+    background-size: cover;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    padding-top:80px;
+}
+header{
+    position:sticky; top:0;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:15px 50px;
+    background:linear-gradient(90deg,#FF3E3E,#FF8C00,#FFD700,#4CAF50,#9C27B0);
+    color:white;
+    box-shadow:0 4px 8px rgba(0,0,0,0.15);
+    width:100%;
+    z-index:1000;
+}
+.logo-title{display:flex; align-items:center; gap:15px;}
+.logo-title img{width:50px; height:50px; object-fit:contain; border-radius:5px; background:white; box-shadow:0 2px 6px rgba(0,0,0,0.2);}
+.logo-title h1{font-size:24px; font-weight:600;}
+nav{display:flex; align-items:center; gap:12px;}
+nav button{background:black; border:none; color:white; padding:10px 20px; border-radius:25px; font-weight:500; cursor:pointer; transition:0.3s;}
+nav button:hover{background:#333; transform:translateY(-2px);}
+main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    padding:40px 20px;
+}
+button{
+    cursor:pointer;
+    transition:0.3s;
+}
+#startPredictionBtn, #singleImageBtn, #multiPredictBtn, #predictBtn, #multiPredictBtnFinal{
+    padding:12px 30px;
+    font-size:16px;
+    font-weight:600;
+    color:white;
+    background:#FF3E3E;
+    border:none;
+    border-radius:25px;
+    transition:0.3s;
+    margin:10px 8px;
+}
+#startPredictionBtn:hover, #singleImageBtn:hover, #multiPredictBtn:hover, #predictBtn:hover, #multiPredictBtnFinal:hover{
+    background:#C70000; transform:translateY(-2px);
+}
+.upload-section{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    margin-top:30px;
+    gap:20px;
+    flex-wrap:wrap;
+}
+.file-card{
+    background: rgba(255,255,255,0.95);
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    text-align:center;
+    width:400px;
+    display:none;
+    opacity:0;
+    transition:opacity 0.5s ease-in-out, transform 0.5s;
+}
+.file-card.active{ display:block; opacity:1; transform:translateY(0);}
+.file-card h3{font-size:24px; color:#2E7D32; margin-bottom:20px;}
+.drop-area{
+    border:2px dashed #2E7D32;
+    border-radius:15px;
+    padding:30px;
+    cursor:pointer;
+    transition:0.3s;
+    position:relative;
+}
+.drop-area.hover{background:rgba(46,125,50,0.1);}
+.drop-area img{
+    width:100%;
+    height:200px;
+    object-fit:contain;
+    display:none;
+    margin-bottom:10px;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+}
+.drop-area p{font-size:16px; color:#333; margin-bottom:10px;}
+.drop-area input[type="file"]{display:none;}
+.warning{
+    color:#b71c1c;
+    background:rgba(255,0,0,0.1);
+    border:1px solid #f44336;
+    padding:10px 20px;
+    border-radius:10px;
+    margin-top:10px;
+    font-weight:500;
+    display:none;
+}
+.result{
+    margin-top:20px;
+    padding:15px 25px;
+    background:#e8f5e9;
+    color:#2e7d32;
+    border-radius:12px;
+    font-size:18px;
+    display:none;
+}
+.nutrition-box{
+    background:#fff3cd;
+    border:1px solid #ffecb5;
+    padding:15px;
+    border-radius:10px;
+    margin-top:15px;
+    display:none;
+    color:#6b4f00;
+    font-size:15px;
+    text-align:left;
+}
+.multi-predict-box{
+    display:none;
+    width:90%;
+    max-width:900px;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.2);
+    margin-top:30px;
+    text-align:center;
+}
+.multi-predict-header{
+    display:flex;
+    justify-content:space-around;
+    background:red;
+    color:white;
+    font-weight:600;
+    padding:10px 20px;
+    border-radius:12px 12px 0 0;
+    font-size:18px;
+}
+.multi-predict-row{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 20px;
+    flex-wrap:wrap;
+    gap:10px;
+    border-top:1px solid #ccc;
+}
+.column{ flex:1; display:flex; flex-direction:column; align-items:center; gap:8px;}
+.column h4{ margin-bottom:10px; font-weight:600;}
+.item-card{
+    background:#e0f7fa;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:14px;
+    color:#00695c;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+    display:flex; justify-content:space-between; width:120px;
+}
+.vertical-line{ width:1px; background:#ccc; margin:0 20px;}
+.total-count{ margin-top:15px; font-weight:600;}
+.fade-in{animation:fadeIn 0.6s forwards;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);}}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo-title">
+        <img src="../static/deepfruit.png" alt="Logo">
+        <h1>DeepFruitVeg</h1>
+    </div>
+    <nav>
+        <button onclick="navigateTo('index.html')">Home</button>
+        <button onclick="navigateTo('about.html')">About Us</button>
+        <button onclick="navigateTo('gallery.html')">Gallery</button>
+        <button onclick="navigateTo('predict.html')">Predict</button>
+        <button onclick="navigateTo('contact.html')">Contact</button>
+    </nav>
+</header>
+
+<main>
+    <button id="startPredictionBtn">Start Prediction</button>
+    <button id="singleImageBtn" style="display:none;">Single Image Prediction</button>
+    <button id="multiPredictBtn" style="display:none;">Multiple Image Prediction</button>
+
+    <div class="upload-section">
+        <!-- Single Image Upload -->
+        <div class="file-card" id="fileCard">
+            <h3>Upload Image for Prediction</h3>
+            <div class="drop-area" id="dropArea">
+                <img id="previewImage" src="#" alt="Preview">
+                <p>Drag & Drop image here or click to browse</p>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+            <p id="warning" class="warning">⚠️ Please upload an image before predicting.</p>
+            <button id="predictBtn">Predict</button>
+            <div class="result" id="resultBox"></div>
+            <div class="nutrition-box" id="nutritionBox"></div>
+        </div>
+
+        <!-- Multiple Image Upload -->
+        <div class="file-card" id="multiFileCard">
+            <h3>Upload Image for Multiple Prediction</h3>
+            <div class="drop-area" id="multiDropArea">
+                <img id="multiPreviewImage" src="#" alt="Preview">
+                <p>Drag & Drop image here or click to browse</p>
+                <input type="file" id="multiFileInput" accept="image/*">
+            </div>
+            <p id="multiWarning" class="warning">⚠️ Please upload an image before predicting.</p>
+            <button id="multiPredictBtnFinal">Predict</button> <!-- Dummy Prediction Button -->
+        </div>
+    </div>
+
+    <!-- Multiple Prediction Result -->
+    <div class="multi-predict-box" id="multiPredictBox"></div>
+</main>
+
+<script>
+function navigateTo(page){ window.location.href = page; }
+
+// Buttons
+const startBtn = document.getElementById('startPredictionBtn');
+const singleBtn = document.getElementById('singleImageBtn');
+const multiBtn = document.getElementById('multiPredictBtn');
+
+// Single Image Elements
+const fileCard = document.getElementById('fileCard');
+const dropArea = document.getElementById('dropArea');
+const fileInput = document.getElementById('fileInput');
+const previewImage = document.getElementById('previewImage');
+const predictBtn = document.getElementById('predictBtn');
+const warning = document.getElementById('warning');
+const resultBox = document.getElementById('resultBox');
+const nutritionBox = document.getElementById('nutritionBox');
+
+// Multiple Image Elements
+const multiFileCard = document.getElementById('multiFileCard');
+const multiDropArea = document.getElementById('multiDropArea');
+const multiFileInput = document.getElementById('multiFileInput');
+const multiPreviewImage = document.getElementById('multiPreviewImage');
+const multiWarning = document.getElementById('multiWarning');
+const multiPredictBtnFinal = document.getElementById('multiPredictBtnFinal');
+const multiPredictBox = document.getElementById('multiPredictBox');
+
+const nutritionData = {
+    Apple: "Rich in fiber, vitamin C, and antioxidants. Helps digestion and boosts immunity.",
+    Banana: "High in potassium and vitamin B6. Provides instant energy and supports heart health.",
+    Beetroot: "Good source of folate and iron. Improves blood flow and stamina.",
+    Broccoli: "Packed with vitamin C, K, and fiber. Supports immunity and bone health.",
+    Carrot: "Rich in beta-carotene and vitamin A. Improves eyesight and skin health.",
+    Mango: "Loaded with vitamin A, C, and fiber. Promotes healthy skin and digestion.",
+    Tomato: "High in lycopene and vitamin C. Supports heart health and immunity.",
+    Potato: "Provides carbs, potassium, and vitamin C. Boosts energy levels.",
+    Onion: "Rich in antioxidants. Helps control blood sugar and boosts immunity.",
+    Cucumber: "Hydrating vegetable with vitamins K and B. Keeps skin and body cool."
+};
+
+// Step 1 → Show Single/Multiple Buttons
+startBtn.addEventListener('click',()=>{
+    startBtn.style.display='none';
+    singleBtn.style.display='inline-block';
+    multiBtn.style.display='inline-block';
+    singleBtn.classList.add('fade-in');
+    multiBtn.classList.add('fade-in');
+});
+
+// Step 2 → Show Single Image Upload
+singleBtn.addEventListener('click',()=>{
+    singleBtn.style.display='none';
+    multiBtn.style.display='none';
+    fileCard.style.display='block';
+    setTimeout(()=>fileCard.classList.add('active'),100);
+});
+
+// Step 3 → Show Multiple Image Upload
+multiBtn.addEventListener('click',()=>{
+    singleBtn.style.display='none';
+    multiBtn.style.display='none';
+    multiFileCard.style.display='block';
+    setTimeout(()=>multiFileCard.classList.add('active'),100);
+});
+
+// Drag & Drop handlers
+function handleDropArea(dropAreaEl,fileInputEl,previewEl){
+    dropAreaEl.addEventListener('click',()=>fileInputEl.click());
+    dropAreaEl.addEventListener('dragover',e=>{ e.preventDefault(); dropAreaEl.classList.add('hover'); });
+    dropAreaEl.addEventListener('dragleave',()=>dropAreaEl.classList.remove('hover'));
+    dropAreaEl.addEventListener('drop',e=>{
+        e.preventDefault();
+        dropAreaEl.classList.remove('hover');
+        const file=e.dataTransfer.files[0];
+        if(file) showPreview(file,previewEl);
+    });
+    fileInputEl.addEventListener('change',e=>showPreview(e.target.files[0],previewEl));
+}
+function showPreview(file,previewEl){
+    const reader=new FileReader();
+    reader.onload=ev=>{
+        previewEl.src=ev.target.result;
+        previewEl.style.display='block';
+    };
+    reader.readAsDataURL(file);
+}
+handleDropArea(dropArea,fileInput,previewImage);
+handleDropArea(multiDropArea,multiFileInput,multiPreviewImage);
+
+// Single Image Predict
+predictBtn.addEventListener('click',async()=>{
+    if(!fileInput.files.length){ warning.style.display='block'; return; }
+    warning.style.display='none';
+    resultBox.style.display='none';
+    nutritionBox.style.display='none';
+    const formData=new FormData();
+    formData.append('file',fileInput.files[0]);
+    predictBtn.innerText="Predicting..."; predictBtn.disabled=true;
+    try{
+        const response=await fetch("/predict",{method:"POST",body:formData});
+        const data=await response.json();
+        predictBtn.innerText="Predict"; predictBtn.disabled=false;
+        if(response.ok && data.prediction){
+            resultBox.innerHTML=`🍎 Predicted: <b>${data.prediction}</b><br>Confidence: ${data.confidence}%`;
+            resultBox.style.display='block';
+            if(nutritionData[data.prediction]){
+                nutritionBox.innerHTML=`<b>Nutrition Info:</b> ${nutritionData[data.prediction]}`;
+                nutritionBox.style.display='block';
+            }
+            resultBox.scrollIntoView({behavior:"smooth",block:"center"});
+        }else{
+            resultBox.innerText="❌ Error during prediction."; resultBox.style.display='block';
+        }
+    }catch(error){
+        console.error(error);
+        resultBox.innerText="⚠️ Prediction failed. Try again."; resultBox.style.display='block';
+        predictBtn.innerText="Predict"; predictBtn.disabled=false;
+    }
+});
+
+// Multiple Image Predict (Dummy Front-end)
+const fruitNames = ["apple","banana","grapes","kiwi","lemon","mango","orange","paprika","pear","pineapple","pomegranate","watermelon"];
+const vegNames = ["beetroot","bell pepper","cabbage","capsicum","carrot","cauliflower","chilli pepper","corn","cucumber","eggplant","garlic","ginger","jalepeno","lettuce","onion","peas","potato","raddish","soy beans","spinach","sweetcorn","sweetpotato","tomato","turnip"];
+
+multiPredictBtnFinal.addEventListener('click',()=>{
+    if(!multiFileInput.files.length){ multiWarning.style.display='block'; return; }
+    multiWarning.style.display='none';
+    generateMultiPredictBox();
+});
+
+function getRandomItems(arr,min,max){
+    const count=Math.floor(Math.random()*(max-min+1))+min;
+    const shuffled=[...arr].sort(()=>0.5-Math.random());
+    return shuffled.slice(0,count);
+}
+
+function generateMultiPredictBox(){
+    const fruits=getRandomItems(fruitNames,4,6);
+    const vegs=getRandomItems(vegNames,4,6);
+
+    multiPredictBox.innerHTML='';
+
+    const headerDiv=document.createElement('div');
+    headerDiv.classList.add('multi-predict-header');
+    const h1=document.createElement('div'); h1.textContent='Fruits';
+    const h2=document.createElement('div'); h2.textContent='Vegetables';
+    headerDiv.appendChild(h1); headerDiv.appendChild(h2);
+    multiPredictBox.appendChild(headerDiv);
+
+    const row=document.createElement('div'); row.classList.add('multi-predict-row','fade-in');
+
+    const fruitCol=document.createElement('div'); fruitCol.classList.add('column');
+    const vegCol=document.createElement('div'); vegCol.classList.add('column');
+
+    fruits.forEach((f,i)=>{
+        const span=document.createElement('span'); span.textContent=`${f} (${i+1})`; span.classList.add('item-card');
+        fruitCol.appendChild(span);
+    });
+    vegs.forEach((v,i)=>{
+        const span=document.createElement('span'); span.textContent=`${v} (${i+1})`; span.classList.add('item-card');
+        vegCol.appendChild(span);
+    });
+
+    const vLine=document.createElement('div'); vLine.classList.add('vertical-line');
+    row.appendChild(fruitCol); row.appendChild(vLine); row.appendChild(vegCol);
+    multiPredictBox.appendChild(row);
+
+    const totalDiv=document.createElement('div'); totalDiv.classList.add('total-count');
+    totalDiv.textContent=`Fruits: ${fruits.length}, Vegetables: ${vegs.length}, Total: ${fruits.length+vegs.length}`;
+    multiPredictBox.appendChild(totalDiv);
+
+    multiPredictBox.style.display='block';
+    multiPredictBox.scrollIntoView({behavior:'smooth'});
+}
+</script>
+
+</body>
+</html>
