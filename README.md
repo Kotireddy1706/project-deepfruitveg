@@ -52,54 +52,57 @@ DEEPFRITVEG_IDENTIFICATION/
 
 
 ## ⚙️ Installation & Setup
-
-### 🧩 Step 1 – Clone or Download the Project
+###  Clone or Download the Project
 
 ```bash
 # If using Git
 git clone https://github.com/Kotireddy1706/project-deepfruitveg.git
 cd project-deepfruitveg
 
-### Installation
+>> STEP 1 : Downlaod dataset
+ Downlaod data set from the dataset link provided in repo
+>> STEP 2 : Installation
 # 🍏 macOS / Linux Setup
 
-# Create Virtual Environment
+># Create Virtual Environment
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Upgrade pip and install dependencies
+># Upgrade pip and install dependencies
 pip install --upgrade pip
 pip install -r requirements_macos.txt
 
-# Run the Flask app
+># Run the Flask app
 cd flask
 python3 app.py
 
-# 🪟 Windows Setup
+>># 🪟 Windows Setup
 
-# Create Virtual Environment
+># Create Virtual Environment
 python -m venv .venv
 .venv\Scripts\activate
 
-# Upgrade pip and install dependencies
+># Upgrade pip and install dependencies
 pip install --upgrade pip
 pip install -r requirements_windows.txt
 
-# Run the Flask app
+># Run the Flask app
 cd flask
 python app.py
 
 🧠 Model Training & Testing
 
 Use the provided Jupyter notebooks to train and test the deep learning model:
-
-fruitveg_classification.ipynb → Train the classification model
-
-fruitveg_testingmodel.ipynb → Evaluate model performance
+(After data set downlaoding copy its path and provide in the training cells of .ipynb training in required cell)
+(And start training each cell one by one after intsllation of required depedencies from requirements.txt)
+**----Training model foldiers
+   >fruitveg_classification.ipynb → Train the classification model
+   >fruitveg_testingmodel.ipynb → Evaluate model performance
 
 Once trained, save your model (e.g., .h5 or .pb) inside the models/ folder.
 
-▶️ Running the Application
+▶️ Running the Application (app.py) using flask with required dependcies from requirements.txt)
+    Then you will get the these local servers 
  * Running on all addresses (0.0.0.0)
  * Running on http://127.0.0.1:5000 **-- (use this to run on local host)
  * Running on http://10.213.159.228:5000
@@ -111,10 +114,8 @@ Now open your browser and go to:
 
 You can find all required dependencies with version numbers in:
 
-requirements_macos.txt – for macOS/Linux users
-
-requirements_windows.txt – for Windows users
-
+**--requirements_macos.txt – for macOS/Linux users
+**--requirements_windows.txt – for Windows users
 
 ---
 
